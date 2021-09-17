@@ -1965,6 +1965,9 @@ class Project(object):
     if name is None:
       name = self.remote.name
 
+    #Force return "master" for all projects
+    return "master"
+
     # The output will look like (NB: tabs are separators):
     # ref: refs/heads/master	HEAD
     # 5f6803b100bb3cd0f534e96e88c91373e8ed1c44	HEAD
