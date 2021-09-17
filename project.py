@@ -1962,20 +1962,23 @@ class Project(object):
     Normally this points to refs/heads/master, but projects are moving to main.
     Support whatever the server uses rather than hardcoding "master" ourselves.
     """
+
     if name is None:
       name = self.remote.name
 
+    #Force return "master" for all projects
+    return "master"
     # The output will look like (NB: tabs are separators):
     # ref: refs/heads/master	HEAD
     # 5f6803b100bb3cd0f534e96e88c91373e8ed1c44	HEAD
-    output = self.bare_git.ls_remote('-q', '--symref', '--exit-code', name, 'HEAD')
+    #output = self.bare_git.ls_remote('-q', '--heads', '--exit-code', name, 'HEAD')
 
-    for line in output.splitlines():
-      lhs, rhs = line.split('\t', 1)
-      if rhs == 'HEAD' and lhs.startswith('ref:'):
-        return lhs[4:].strip()
+    # for line in output.splitlines():
+      # lhs, rhs = line.split('\t', 1)
+      # if rhs == 'HEAD' and lhs.startswith('ref:'):
+        # return lhs[4:].strip()
 
-    return None
+    # return None
 
   def _CheckForImmutableRevision(self):
     try:
