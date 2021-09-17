@@ -1059,7 +1059,7 @@ class Project(object):
                        is_new=None,
                        current_branch_only=None,
                        force_sync=False,
-                       clone_bundle=True,
+                       clone_bundle=False,
                        tags=None,
                        archive=False,
                        optimized_fetch=False,
@@ -1106,7 +1106,7 @@ class Project(object):
       clone_bundle = False
 
     if self.name in partial_clone_exclude:
-      clone_bundle = True
+      clone_bundle = False
       clone_filter = None
 
     if is_new is None:
@@ -2367,7 +2367,7 @@ class Project(object):
         print('%s' % output, file=sys.stderr)
 
     if os.path.exists(tmpPath):
-      if curlret == 0 and self._IsValidBundle(tmpPath, quiet):
+      if curlret == 0:
         platform_utils.rename(tmpPath, dstPath)
         return True
       else:

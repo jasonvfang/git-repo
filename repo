@@ -144,7 +144,7 @@ if not REPO_URL:
   REPO_URL = 'https://gerrit.googlesource.com/git-repo'
 REPO_REV = os.environ.get('REPO_REV')
 if not REPO_REV:
-  REPO_REV = 'stable'
+  REPO_REV = 'master'
 # URL to file bug reports for repo tool issues.
 BUG_URL = 'https://bugs.chromium.org/p/gerrit/issues/entry?template=Repo+tool+issue'
 
@@ -536,15 +536,11 @@ def check_repo_verify(repo_verify, quiet=False):
 
 def check_repo_rev(dst, rev, repo_verify=True, quiet=False):
   """Check that |rev| is valid."""
-  do_verify = check_repo_verify(repo_verify, quiet=quiet)
   remote_ref, local_rev = resolve_repo_rev(dst, rev)
   if not quiet and not remote_ref.startswith('refs/heads/'):
     print('warning: repo is not tracking a remote branch, so it will not '
           'receive updates', file=sys.stderr)
-  if do_verify:
-    rev = verify_rev(dst, remote_ref, local_rev, quiet)
-  else:
-    rev = local_rev
+  rev = local_rev
   return (remote_ref, rev)
 
 
@@ -562,8 +558,7 @@ def _Init(args, gitc_init=False):
   opt.quiet = opt.output_mode is False
   opt.verbose = opt.output_mode is True
 
-  if opt.clone_bundle is None:
-    opt.clone_bundle = False if opt.partial_clone else True
+  opt.clone_bundle = False
 
   url = opt.repo_url or REPO_URL
   rev = opt.repo_rev or REPO_REV
