@@ -973,10 +973,11 @@ class Project(object):
       raise GitError('not currently on a branch')
 
     branch = self.GetBranch(branch)
-    if not branch.LocalMerge:
-      raise GitError('branch %s does not track a remote' % branch.name)
-    if not branch.remote.review:
-      raise GitError('remote %s has no review url' % branch.remote.name)
+
+    # if not branch.LocalMerge:
+      # raise GitError('branch %s does not track a remote' % branch.name)
+    # if not branch.remote.review:
+      # raise GitError('remote %s has no review url' % branch.remote.name)
 
     if dest_branch is None:
       dest_branch = self.dest_branch
@@ -989,43 +990,46 @@ class Project(object):
       branch.remote.projectname = self.name
       branch.remote.Save()
 
-    url = branch.remote.ReviewUrl(self.UserEmail, validate_certs)
-    if url is None:
-      raise UploadError('review not configured')
+    # url = branch.remote.ReviewUrl(self.UserEmail, validate_certs)
+    # if url is None:
+      # raise UploadError('review not configured')
     cmd = ['push']
     if dryrun:
       cmd.append('-n')
 
-    if url.startswith('ssh://'):
-      cmd.append('--receive-pack=gerrit receive-pack')
+    # if url.startswith('ssh://'):
+      # cmd.append('--receive-pack=gerrit receive-pack')
 
     for push_option in (push_options or []):
       cmd.append('-o')
       cmd.append(push_option)
 
-    cmd.append(url)
+    #cmd.append(url)
 
     if dest_branch.startswith(R_HEADS):
       dest_branch = dest_branch[len(R_HEADS):]
 
-    ref_spec = '%s:refs/for/%s' % (R_HEADS + branch.name, dest_branch)
-    opts = []
-    if auto_topic:
-      opts += ['topic=' + branch.name]
-    opts += ['t=%s' % p for p in hashtags]
-    opts += ['l=%s' % p for p in labels]
+    # ref_spec = '%s:refs/for/%s' % (R_HEADS + branch.name, dest_branch)
+    # opts = []
+    # if auto_topic:
+      # opts += ['topic=' + branch.name]
+    # opts += ['t=%s' % p for p in hashtags]
+    # opts += ['l=%s' % p for p in labels]
 
-    opts += ['r=%s' % p for p in people[0]]
-    opts += ['cc=%s' % p for p in people[1]]
-    if notify:
-      opts += ['notify=' + notify]
-    if private:
-      opts += ['private']
-    if wip:
-      opts += ['wip']
-    if opts:
-      ref_spec = ref_spec + '%' + ','.join(opts)
-    cmd.append(ref_spec)
+    # opts += ['r=%s' % p for p in people[0]]
+    # opts += ['cc=%s' % p for p in people[1]]
+    # if notify:
+      # opts += ['notify=' + notify]
+    # if private:
+      # opts += ['private']
+    # if wip:
+      # opts += ['wip']
+    # if opts:
+      # ref_spec = ref_spec + '%' + ','.join(opts)
+    # cmd.append(ref_spec)
+
+    cmd.append(branch.remote.name)
+    cmd.append(branch.name)
 
     if GitCommand(self, cmd, bare=True).Wait() != 0:
       raise UploadError('Upload failed')

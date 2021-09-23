@@ -235,7 +235,8 @@ Gerrit Code Review:  https://www.gerritcodereview.com/
       for commit in commit_list:
         print('         %s' % commit)
 
-      print('to %s (y/N)? ' % remote.review, end='')
+      #print('to %s (y/N)? ' % remote.review, end='')
+      print('to %s (y/N)? ' % name, end='')
       # TODO: When we require Python 3, use flush=True w/print above.
       sys.stdout.flush()
       if opt.yes:
