@@ -173,11 +173,11 @@ class _XmlRemote(object):
     # We handle no scheme by replacing it with an obscure protocol, gopher
     # and then replacing it with the original when we are done.
 
-    if manifestUrl.find(':') != manifestUrl.find('/') - 1:
+    if url[0:4] == "git@":#Leave url as git protocol for checkout
+      url = url
+    elif manifestUrl.find(':') != manifestUrl.find('/') - 1:
       url = urllib.parse.urljoin('gopher://' + manifestUrl, url)
       url = re.sub(r'^gopher://', '', url)
-    elif url[0:4] == "git@":#Leave url as git protocol for checkout
-      url = url
     else:
       url = urllib.parse.urljoin(manifestUrl, url)
     return url
